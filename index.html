@@ -354,6 +354,10 @@
             border-radius: 4px;
         }
 
+        .polaroid.polaroid-extra-large {
+            height: 400px;
+        }
+
         .polaroid:hover {
             transform: rotate(-2deg) scale(1.02);
         }
@@ -394,7 +398,7 @@
         }
 
         .polaroid-caption-large {
-            max-height: 140px;
+            max-height: 170px;
         }
 
         .polaroid-title {
@@ -565,6 +569,10 @@
                 height: 350px;
             }
 
+            .polaroid.polaroid-extra-large {
+                height: 380px;
+            }
+
             .polaroid-image {
                 height: 200px;
             }
@@ -575,7 +583,7 @@
             }
 
             .polaroid-caption-large {
-                max-height: 140px;
+                max-height: 160px;
             }
 
             .polaroid-title {
@@ -610,6 +618,10 @@
                 height: 310px;
             }
 
+            .polaroid.polaroid-extra-large {
+                height: 340px;
+            }
+
             .polaroid-image {
                 height: 170px;
             }
@@ -620,7 +632,7 @@
             }
 
             .polaroid-caption-large {
-                max-height: 140px;
+                max-height: 150px;
             }
 
             .polaroid-title {
@@ -1040,11 +1052,15 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
             document.getElementById('momentTitle').textContent = moment.title;
             document.getElementById('momentCaption').textContent = moment.caption;
 
+            const polaroidElement = document.getElementById('polaroid');
             const captionElement = document.getElementById('polaroidCaption');
-            if (index === 9 || index === 11 || index === 12) {
+            
+            if (index === 9 || index === 12) {
                 captionElement.classList.add('polaroid-caption-large');
+                polaroidElement.classList.add('polaroid-extra-large');
             } else {
                 captionElement.classList.remove('polaroid-caption-large');
+                polaroidElement.classList.remove('polaroid-extra-large');
             }
 
             const imageDiv = document.getElementById('polaroidImage');
