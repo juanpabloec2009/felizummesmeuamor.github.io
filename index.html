@@ -148,24 +148,29 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
+            width: 100%;
+            max-width: 400px;
         }
 
         .envelope {
-            width: 280px;
-            height: 200px;
-            background: linear-gradient(135deg, #f5f1e8 0%, #f9f6f0 100%);
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), inset 0 1px 3px rgba(255, 255, 255, 0.5);
+            width: 180px;
+            height: 140px;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
             cursor: pointer;
             animation: float 3s ease-in-out infinite;
             position: relative;
             transition: all 0.3s ease;
-            border: 2px solid rgba(232, 220, 200, 0.6);
+            border: none;
+            display: flex;
+            flex-direction: column;
+            overflow: visible;
+            padding: 0;
         }
 
         .envelope:hover {
             transform: scale(1.08);
-            box-shadow: 0 25px 70px rgba(0, 0, 0, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.5);
         }
 
         .envelope.hidden {
@@ -177,36 +182,38 @@
             50% { transform: translateY(-20px); }
         }
 
+        .envelope-top {
+            flex: 0 0 100%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-radius: 0;
+        }
+
+        .envelope-bottom {
+            display: none;
+        }
+
         .envelope-flap {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 50%;
-            background: linear-gradient(135deg, #e8dcc8 0%, #f0e6d8 100%);
-            border-radius: 12px 12px 0 0;
+            height: 100%;
+            background: transparent;
+            border-radius: 0;
             transition: transform 0.6s ease;
             transform-origin: top;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.1);
-            border-bottom: 1px solid rgba(200, 180, 160, 0.3);
+            box-shadow: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .envelope.open .envelope-flap {
             transform: rotateX(180deg);
-        }
-
-        .envelope-front {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 50%;
-            background: linear-gradient(135deg, #faf7f2 0%, #f5f1e8 100%);
-            border-radius: 0 0 12px 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 40px;
         }
 
         .envelope-svg-container {
@@ -217,6 +224,8 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
         }
 
         .envelope-svg-container:hover {
@@ -225,8 +234,8 @@
         }
 
         .envelope-svg-container svg {
-            width: 90px;
-            height: 70px;
+            width: 180px;
+            height: 140px;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
         }
 
@@ -402,10 +411,7 @@
         }
 
         .polaroid-title {
-            font-size: 13px;
-            color: #ff4f8f;
-            font-weight: 600;
-            margin-bottom: 2px;
+            display: none;
         }
 
         /* TELA 6: FINAL */
@@ -602,6 +608,11 @@
             .final-title {
                 font-size: 40px;
             }
+
+            .envelope-svg-container svg {
+                width: 160px;
+                height: 120px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -639,11 +650,6 @@
                 font-size: 13px;
             }
 
-            .envelope {
-                width: 240px;
-                height: 170px;
-            }
-
             .letter-content {
                 width: 280px;
                 height: auto;
@@ -666,6 +672,11 @@
 
             .final-title {
                 font-size: 36px;
+            }
+
+            .envelope-svg-container svg {
+                width: 150px;
+                height: 115px;
             }
         }
     </style>
@@ -767,7 +778,17 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
   background:var(--accent);border-radius:2px}
 .slide .kpi .big{font-size:32px}
 .slide .bars{height:200px}
-.slide.cover{justify-content:flex-end;color:#fff;background:var(--cover,linear-gradient(160deg,var(--accent) 0%,var(--ink) 100%)) center/cover no-repeat}
+/* Capa: o degradê é derivado SÓ do accent, nunca accent→ink. Ir até --ink some quando a marca
+   tem primária escura — o tenant develop usa #1A1A2E ("Bunker") e --ink é #1A1A1A, então o
+   degradê ia de quase-preto para quase-preto e a capa saía um retângulo liso (AA-2165). Marca
+   escura é legítima, não é erro de configuração: derivando os dois extremos do PRÓPRIO accent
+   (clareado no topo, escurecido embaixo) o degradê tem amplitude garantida para qualquer
+   primária — clara ou escura — e continua on-brand. */
+.slide.cover{justify-content:flex-end;color:#fff;
+  background:var(--cover,linear-gradient(160deg,
+    color-mix(in srgb,var(--accent) 78%,#fff) 0%,
+    var(--accent) 42%,
+    color-mix(in srgb,var(--accent) 62%,#000) 100%)) center/cover no-repeat}
 .slide.cover .scrim{position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(0,0,0,.12) 0%,rgba(0,0,0,.72) 100%)}
 .slide.cover>*{position:relative;z-index:1}
@@ -775,6 +796,21 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
 .slide.cover .lead{color:#fff;opacity:.9}
 /* On-screen: a pista é HORIZONTAL, um slide por vez, com a navegação do kit (AA-1656 S2). */
 @media screen{
+  /* PALCO: o deck ocupa a viewport inteira e vira moldura; a PISTA é que recebe a largura do
+     slide, centrada. Antes o `.deck` era bloco comum — o slide é `width:100%` com
+     `aspect-ratio:16/9`, então a ALTURA saía da largura e ninguém olhava a altura do painel: num
+     painel alto e estreito (o formato real do produto) o deck grudava no topo e sobrava metade da
+     tela em branco. Só centralizar não resolve — um 16:9 dentro de um painel retrato nunca
+     preenche, apenas dividiria o vazio em dois. O palco transforma a faixa em enquadramento, que
+     é o que todo visualizador de slide faz.
+     A largura da pista entra no `min()` para a altura 16:9 resultante caber na viewport: sem
+     isso, num painel baixo e largo o slide passaria a ESTOURAR por baixo em vez de sobrar por
+     cima. Só em @media screen: no print cada slide ocupa a sua página e a pilha vertical vale. */
+  .deck{min-height:100vh;width:100%;max-width:none;margin:0;padding:24px 20px;
+    display:flex;flex-direction:column;justify-content:center;
+    background:color-mix(in srgb,var(--ink) 8%,#fff)}
+  .deck-track{width:min(1000px,100%,calc((100vh - 148px) * 16 / 9));margin:0 auto;
+    box-shadow:0 18px 48px -12px color-mix(in srgb,var(--ink) 32%,transparent);border-radius:10px}
   .deck-track{flex-direction:row;gap:0;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;
     scroll-behavior:smooth;scrollbar-width:none}
   .deck-track::-webkit-scrollbar{display:none}
@@ -809,7 +845,7 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
     <!-- TELA 2: INICIAL -->
     <div id="home" class="screen">
         <div class="home-title">meu amor</div>
-        <div class="home-subtitle">Preparei algo especial para você...</div>
+        <div class="home-subtitle">fiz um presente para você que nunca vai esquecer, cada pedacinho desse site foi feito pensando em você eu espero do fundo do meu coração que você goste</div>
         <button class="btn" onclick="nextScreen()">Começar 💌</button>
     </div>
 
@@ -817,28 +853,37 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
     <div id="letter" class="screen">
         <div class="envelope-container">
             <div class="envelope" id="envelope" onclick="abrirCarta()">
-                <div class="envelope-flap"></div>
-                <div class="envelope-front">
-                    <div class="envelope-svg-container">
-                        <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-                            <!-- Papel de fundo -->
-                            <rect x="8" y="15" width="84" height="60" fill="none" stroke="#d4c4b0" stroke-width="1.5" rx="2" opacity="0.6"/>
-                            
-                            <!-- Vincos da carta dobrada -->
-                            <line x1="50" y1="15" x2="50" y2="75" stroke="#e8dcc8" stroke-width="1" opacity="0.5"/>
-                            <line x1="20" y1="45" x2="80" y2="45" stroke="#e8dcc8" stroke-width="0.8" opacity="0.4"/>
-                            
-                            <!-- Linhas simuladas de texto -->
-                            <line x1="15" y1="25" x2="75" y2="25" stroke="#d4c4b0" stroke-width="0.8" opacity="0.5"/>
-                            <line x1="15" y1="32" x2="75" y2="32" stroke="#d4c4b0" stroke-width="0.8" opacity="0.5"/>
-                            <line x1="15" y1="39" x2="70" y2="39" stroke="#d4c4b0" stroke-width="0.8" opacity="0.5"/>
-                            <line x1="15" y1="55" x2="75" y2="55" stroke="#d4c4b0" stroke-width="0.8" opacity="0.5"/>
-                            <line x1="15" y1="62" x2="75" y2="62" stroke="#d4c4b0" stroke-width="0.8" opacity="0.5"/>
-                            <line x1="15" y1="69" x2="65" y2="69" stroke="#d4c4b0" stroke-width="0.8" opacity="0.5"/>
-                            
-                            <!-- Coração pequeno como marca -->
-                            <path d="M 85 20 Q 85 18 87 18 Q 89 18 89 20 Q 89 22 87 24 Q 85 22 85 20" fill="#ff6b9d" opacity="0.6"/>
-                        </svg>
+                <div class="envelope-top">
+                    <div class="envelope-flap">
+                        <div class="envelope-svg-container">
+                            <svg viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg">
+                                <defs>
+                                    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                                        <feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.15"/>
+                                    </filter>
+                                    <linearGradient id="envGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#f5f1e8;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#e8dcc8;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                
+                                <rect x="10" y="35" width="120" height="60" rx="2" fill="url(#envGradient)" stroke="#d4c4b0" stroke-width="0.8" filter="url(#shadow)"/>
+                                
+                                <polygon points="10,35 70,10 70,35" fill="#f0e6d8" stroke="#d4c4b0" stroke-width="0.8" filter="url(#shadow)"/>
+                                
+                                <polygon points="70,10 130,35 70,35" fill="#e8dcc8" stroke="#d4c4b0" stroke-width="0.8" filter="url(#shadow)"/>
+                                
+                                <line x1="10" y1="95" x2="70" y2="55" stroke="#d4c4b0" stroke-width="0.6" opacity="0.6"/>
+                                
+                                <line x1="130" y1="95" x2="70" y2="55" stroke="#d4c4b0" stroke-width="0.6" opacity="0.6"/>
+                                
+                                <g transform="translate(70, 60)">
+                                    <path d="M 0,-3 C -2,-5 -5,-5 -5,-2 C -5,0 -2,3 0,5 C 2,3 5,0 5,-2 C 5,-5 2,-5 0,-3 Z" fill="#ff6b9d" filter="url(#shadow)"/>
+                                </g>
+                                
+                                <ellipse cx="70" cy="40" rx="45" ry="8" fill="white" opacity="0.15"/>
+                            </svg>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -904,19 +949,21 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
         const screens = ['loading', 'home', 'letter', 'story', 'moments', 'final', 'ending'];
 
         const moments = [
-            { title: 'Momento 1', caption: 'Antes mesmo de existir um namoro, já existiam momentos que faziam nossa história ficar especial.' },
-            { title: 'Momento 2', caption: 'Cada conversa, cada sorriso e cada momento foram construindo algo bonito entre nós.' },
-            { title: 'Momento 3', caption: 'Aqui eu já tinha certeza que era você. Parecia algo tão simples fazer meu bigode, mas isso significava tanto.', isVideo: true },
-            { title: 'Momento 4', caption: 'Você passando mal. Mesmo que a gente não tinha nada ainda, mas eu conseguia sentir que a minha presença te dava paz e eu me sentia bem ao seu lado.' },
-            { title: 'Momento 5', caption: 'Sem perceber, estávamos criando memórias que eu guardaria para sempre.' },
-            { title: 'Momento 6', caption: 'Essa é uma lembrança que nunca vai ser esquecida. Aqui nós começamos a perder o medo de demonstrar tudo o que sentíamos um pelo outro.' },
-            { title: 'Momento 7', caption: 'Um cowboy de chapéu rosa e um rei. Até mesmo esses momentos são muito especiais ao seu lado.' },
-            { title: 'Momento 8', caption: 'O primeiro contato que tive com a sua família completa. Nosso amor crescendo cada vez mais a cada dia.' },
-            { title: 'Momento 9', caption: 'Um rolê completamente aleatório no centro.' },
-            { title: 'Momento 10', caption: 'Um jantar em casal em uma foto que você não gosta, mas eu garanto que está linda como sempre, amor. Você é a mulher mais linda desse mundo todo, a mulher que eu sempre sonhei. Quem vê de longe acha até que é IA.' },
-            { title: 'Momento 11', caption: 'Eu mimindo nos seus braços, porque só precisa de 3 passadas na minha cabeça e eu capoto. Amor, são momentos assim que nunca vão ser esquecidos mesmo.' },
-            { title: 'Momento 12', caption: 'Aqui eu descobri o verdadeiro significado de ser amado, onde nenhum quer ser melhor que o outro, e sim ser melhores juntos. Um cuidando do outro e sendo um só. Eu te amo muito, meu amor.' },
-            { title: 'Momento 13', caption: 'E chegamos a esse momento. No dia 05 de julho, mesmo sabendo qual seria sua resposta, mesmo tendo certeza de tudo, eu nunca fiquei tão nervoso para te ver — uma ansiedade incontrolável. Só queria te chamar de minha namorada.' }
+            { title: '', caption: 'Antes mesmo de existir um namoro, já existiam momentos que faziam nossa história ficar especial.' },
+            { title: '', caption: 'Cada conversa, cada sorriso e cada momento foram construindo algo bonito entre nós.' },
+            { title: '', caption: 'Aqui eu já tinha certeza que era você. Parecia algo tão simples fazer meu bigode, mas isso significava tanto.', isVideo: true, videoSrc: 'video/momento3.mp4' },
+            { title: '', caption: 'Você passando mal. Mesmo que a gente não tinha nada ainda, mas eu conseguia sentir que a minha presença te dava paz e eu me sentia bem ao seu lado.' },
+            { title: '', caption: 'Sem perceber, estávamos criando memórias que eu guardaria para sempre.' },
+            { title: '', caption: 'Essa é uma lembrança que nunca vai ser esquecida. Aqui nós começamos a perder o medo de demonstrar tudo o que sentíamos um pelo outro.' },
+            { title: '', caption: 'Um cowboy de chapéu rosa e um rei. Até mesmo esses momentos são muito especiais ao seu lado.' },
+            { title: '', caption: 'O primeiro contato que tive com a sua família completa. Nosso amor crescendo cada vez mais a cada dia.' },
+            { title: '', caption: 'Um rolê completamente aleatório no centro.' },
+            { title: '', caption: 'Um jantar em casal em uma foto que você não gosta, mas eu garanto que está linda como sempre, amor. Você é a mulher mais linda desse mundo todo, a mulher que eu sempre sonhei. Quem vê de longe acha até que é IA.' },
+            { title: '', caption: 'o dia que fui pedir a permissao do seus pais, nunca fiquei tao nervoso na minha vida ksksks', isVideo: true, videoSrc: 'video/pedido_aos_pais.mp4' },
+            { title: '', caption: 'Aqui eu descobri o verdadeiro significado de ser amado, onde nenhum quer ser melhor que o outro, e sim ser melhores juntos. Um cuidando do outro e sendo um só. Eu te amo muito, meu amor.' },
+            { title: '', caption: 'Eu mimindo nos seus braços, porque só precisa de 3 passadas na minha cabeça e eu capoto. Amor, são momentos assim que nunca vão ser esquecidos mesmo.' },
+            { title: '', caption: 'o grande dia, aonde muitas coisas aconteceram fora do planejado, mas ao mesmo tempo aonde tudo foi pensado com muito carinho e amor para que voce se sentisse a mulher mais especial do mundo', isVideo: true, videoSrc: 'video/pedido_oficial.mp4' },
+            { title: '', caption: 'E chegamos a esse momento. No dia 05 de julho, mesmo sabendo qual seria sua resposta, mesmo tendo certeza de tudo, eu nunca fiquei tao nervoso para te ver — uma ansiedade incontrolável. Só queria te chamar de minha namorada.' }
         ];
 
         // PÉTALAS
@@ -1055,7 +1102,7 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
             const polaroidElement = document.getElementById('polaroid');
             const captionElement = document.getElementById('polaroidCaption');
             
-            if (index === 9 || index === 12) {
+            if (index === 9 || index === 12 || index === 13) {
                 captionElement.classList.add('polaroid-caption-large');
                 polaroidElement.classList.add('polaroid-extra-large');
             } else {
@@ -1068,7 +1115,7 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
 
             if (moment.isVideo) {
                 const video = document.createElement('video');
-                video.src = 'video/momento3.mp4';
+                video.src = moment.videoSrc;
                 video.controls = true;
                 video.style.width = '100%';
                 video.style.height = '100%';
