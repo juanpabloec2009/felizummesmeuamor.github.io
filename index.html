@@ -952,7 +952,7 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
             { title: '', caption: 'Um jantar em casal em uma foto que você não gosta, mas eu garanto que está linda como sempre, amor. Você é a mulher mais linda desse mundo todo, a mulher que eu sempre sonhei. Quem vê de longe acha até que é IA.' },
             { title: '', caption: 'Eu mimindo nos seus braços, porque só precisa de 3 passadas na minha cabeça e eu capoto. Amor, são momentos assim que nunca vão ser esquecidos mesmo.' },
             { title: '', caption: 'o dia que fui pedir a permissao do seus pais, nunca fiquei tao nervoso na minha vida ksksks', isVideo: true, videoSrc: 'video/pedido_aos_pais.mp4' },
-            { title: '', caption: 'Aqui eu descobri o verdadeiro significado de ser amado, onde nenhum quer ser melhor que o outro, e sim ser melhores juntos. Um cuidando do outro e sendo um só. Eu te amo muito, meu amor.' },
+            { title: '', caption: 'Aqui eu descobri o verdadeiro significado de ser amado, onde nenhum quer ser melhor que o outro, e sim ser melhores juntos. Um cuidando do outro e sendo um só. Eu te amo muito, meu amor.', isImage: true, imageSrc: 'imagens/momento12.jpg' },
             { title: '', caption: 'o grande dia, aonde muitas coisas aconteceram fora do planejado, mas ao mesmo tempo aonde tudo foi pensado com muito carinho e amor para que voce se sentisse a mulher mais especial do mundo', isVideo: true, videoSrc: 'video/pedido_oficial.mp4' },
             { title: '', caption: 'E chegamos a esse momento. No dia 05 de julho, mesmo sabendo qual seria sua resposta, mesmo tendo certeza de tudo, eu nunca fiquei tao nervoso para te ver — uma ansiedade incontrolável. Só queria te chamar de minha namorada.' }
         ];
@@ -1093,7 +1093,7 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
             const polaroidElement = document.getElementById('polaroid');
             const captionElement = document.getElementById('polaroidCaption');
             
-            if (index === 10 || index === 11 || index === 13 || index === 14) {
+            if (index === 10 || index === 11 || index === 12 || index === 13 || index === 14) {
                 captionElement.classList.add('polaroid-caption-large');
                 polaroidElement.classList.add('polaroid-extra-large');
             } else {
@@ -1112,6 +1112,14 @@ table.fbrand tbody tr:nth-child(even){background:var(--card)}
                 video.style.height = '100%';
                 video.style.objectFit = 'cover';
                 imageDiv.appendChild(video);
+            } else if (moment.isImage) {
+                const img = document.createElement('img');
+                img.src = moment.imageSrc;
+                img.onerror = () => {
+                    imageDiv.textContent = `Momento ${index + 1}`;
+                    imageDiv.style.fontSize = '24px';
+                };
+                imageDiv.appendChild(img);
             } else {
                 const img = document.createElement('img');
                 img.src = `imagens/momento${index + 1}.jpg`;
